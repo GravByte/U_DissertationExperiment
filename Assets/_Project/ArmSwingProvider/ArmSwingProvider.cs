@@ -24,7 +24,7 @@ public class ArmSwingProvider : MonoBehaviour
     [SerializeField] float pSpeed = 5f;
     
     //---- Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         //---- Get the CharacterController component & check if it exists, otherwise throw an error
         characterController = GetComponent<CharacterController>();
@@ -44,13 +44,16 @@ public class ArmSwingProvider : MonoBehaviour
     }
 
     //---- Update is called once per frame
-    void Update()
+    private void Update()
     {
         //---- Calculate velocity of player hand movement
         Vector3 leftHandVelocity = leftHand.transform.position - _prevPosLeft;
         Vector3 rightHandVelocity = rightHand.transform.position - _prevPosRight;
         float totalVelocity =+ leftHandVelocity.magnitude * 0.8f + rightHandVelocity.magnitude * 0.8f;
-
+        
+        //---- Only move the player if the controller grip buttons are pressed
+        
+        
         //---- If true, player is swinging arms
         if (totalVelocity >= 0.05f)
         {
@@ -65,8 +68,8 @@ public class ArmSwingProvider : MonoBehaviour
         characterController.Move(gravity * Time.deltaTime);
         SetPrevPos();
     }
-    
-    void SetPrevPos()
+
+    private void SetPrevPos()
     {
         //---- Set previous position of player hands
         _prevPosLeft = leftHand.transform.position;
