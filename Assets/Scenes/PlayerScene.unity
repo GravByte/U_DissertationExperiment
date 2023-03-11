@@ -457,6 +457,12 @@ MonoBehaviour:
   leftHand: {fileID: 0}
   rightHand: {fileID: 0}
   mainCamera: {fileID: 0}
+  leftGripAction: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  rightGripAction: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
+  holdGripToggle: {fileID: 1185114613509541606, guid: c348712bda248c246b8c49b3db54643f,
+    type: 3}
   gravity: {x: 0, y: -9.81, z: 0}
   pSpeed: 15
 --- !u!143 &49285896

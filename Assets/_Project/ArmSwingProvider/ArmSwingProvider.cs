@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ArmSwingProvider : MonoBehaviour
 {
@@ -11,10 +12,20 @@ public class ArmSwingProvider : MonoBehaviour
     [Tooltip("The left and right hand game objects")]
     [SerializeField] private GameObject leftHand, rightHand;
     
+    [Tooltip("The main camera for the player head")]
+    [SerializeField] private Camera mainCamera;
+
+
+    [Header("XR Input Actions")]
+    [Tooltip("The XR Input Action for the left hand grip button")]
+    [SerializeField] private InputActionReference leftGripAction;
+    [Tooltip("The XR Input Action for the right hand grip button")]
+    [SerializeField] private InputActionReference rightGripAction;
+
+    
     [Header("Vector Positions")]
     private Vector3 _prevPosLeft, _prevPosRight, _direction;
-
-    [SerializeField] private Camera mainCamera;
+    
     
     [Header("Player Movement")]
     [Tooltip("The speed at which the player falls")]
@@ -39,6 +50,8 @@ public class ArmSwingProvider : MonoBehaviour
         rightHand = GameObject.FindWithTag("RightHand");
         if (leftHand == null || rightHand == null) Debug.LogError("No left or right hand game objects found");
         
+        if (leftGripAction == null || rightGripAction == null) Debug.LogError("No left or right grip actions assigned");
+
         //---- Saves the initial position of the player hands
         SetPrevPos();
     }
@@ -52,16 +65,17 @@ public class ArmSwingProvider : MonoBehaviour
         float totalVelocity =+ leftHandVelocity.magnitude * 0.8f + rightHandVelocity.magnitude * 0.8f;
         
         //---- Only move the player if the controller grip buttons are pressed
-        
-        
-        //---- If true, player is swinging arms
-        if (totalVelocity >= 0.05f)
+        if (leftGripAction.action.ReadValue<float>() == 1f && rightGripAction.action.ReadValue<float>() == 1f)
         {
-            //---- Get direction of player head
-            _direction = mainCamera.transform.forward;
+            //---- If true, player is swinging arms
+            if (totalVelocity >= 0.05f)
+            {
+                //---- Get direction of player head
+                _direction = mainCamera.transform.forward;
             
-            //---- Move player in direction of head using the character controller
-            characterController.Move(pSpeed * Time.deltaTime * Vector3.ProjectOnPlane(_direction, Vector3.up));
+                //---- Move player in direction of head using the character controller
+                characterController.Move(pSpeed * Time.deltaTime * Vector3.ProjectOnPlane(_direction, Vector3.up));
+            }
         }
         
         //---- Apply gravity to player
